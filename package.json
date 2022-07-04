@@ -4,6 +4,9 @@
   "repository": "https://github.com/reimarrosas/airdnd-server",
   "author": "Reimar Rosas <reimarrosas0208@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/app.ts"
+  },
   "dependencies": {
     "argon2": "^0.28.5",
     "bunyan": "^1.8.15",

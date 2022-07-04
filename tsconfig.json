@@ -25,5 +25,8 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true
   },
-  "exclude": ["migrations", "**/*.js"]
+  "exclude": ["migrations", "**/*.js"],
+  "ts-node": {
+    "files": true
+  }
 }
