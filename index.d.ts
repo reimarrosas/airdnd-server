@@ -70,7 +70,11 @@ type EntityID<T extends number | string> = {
   id: T;
 };
 
-type UserEntity = SignupCreds & EntityID<number> & EntityTimestamp;
+type UserEntity = SignupCreds &
+  EntityID<number> &
+  EntityTimestamp & {
+    isVerified: boolean;
+  };
 
 type Verification = EntityID<string> & {
   userId: number;

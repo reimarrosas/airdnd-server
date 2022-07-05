@@ -12,7 +12,7 @@ export const cookieSettings: CookieOptions = {
 };
 export const port = process.env["PORT"] ?? 1337;
 export const databaseUrl =
-  process.env["DATABASE_URL"] ?? "postgres://localhost/airdnd";
+  process.env["DATABASE_URL"] ?? "postgres://postgres:reimar@localhost";
 export const threeYears = 1000 * 60 * 60 * 24 * 365 * 3;
 export const clientUrl = process.env["CLIENT_URL"] ?? "http://localhost:3000";
 export const hashingSettings = {

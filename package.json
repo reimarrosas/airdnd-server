@@ -5,7 +5,9 @@
   "author": "Reimar Rosas <reimarrosas0208@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon src/app.ts",
+    "migrate:make": "knex --knexfile ./src/config/knexfile.ts migrate:make -x ts",
+    "migrate:latest": "knex --knexfile ./src/config/knexfile.ts migrate:latest"
   },
   "dependencies": {
     "argon2": "^0.28.5",

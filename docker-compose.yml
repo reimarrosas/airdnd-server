@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  store_persist:
+    image: postgres:latest
+    restart: "always"
+    environment:
+      - POSTGRES_PASSWORD=reimar
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - persist_data:/var/lib/postgresql/data/
+  store_session:
+    image: redis:latest
+    restart: "always"
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - session_data:/data
+volumes:
+  persist_data:
+  session_data:
