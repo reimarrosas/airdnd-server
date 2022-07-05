@@ -1,3 +1,5 @@
+import { hasKey } from "./typeNarrower";
+
 export class HttpError extends Error {
   statusCode!: number;
 
@@ -46,4 +48,4 @@ export const generateHttpError = (type: HttpErrorType, message?: string) => {
 };
 
 export const isHttpError = (err: any): err is HttpError =>
-  Object.hasOwn(err, "statusCode") && typeof err.statusCode === "number";
+  hasKey(err, "statusCode") && typeof err.statusCode === "number";

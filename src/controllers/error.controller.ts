@@ -10,8 +10,10 @@ export const error: ErrorRequestHandler = (err, _req, res, _next) => {
   // const logContents = {err};
   const error = isHttpError(err) ? err : generateHttpError("Internal");
 
+  console.log(err);
+
   const response: HttpResponseMessage = {
-    message: err.message,
+    message: error.message,
     success: false,
   };
 

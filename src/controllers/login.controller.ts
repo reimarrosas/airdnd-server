@@ -6,7 +6,6 @@ import { changeUserPass, getUser } from "../services/user.services";
 import {
   isEmailValid,
   isLoginCredsValid,
-  isPasswordValid,
   isRecoveryValid,
 } from "../utilities/authValidator";
 import { generateHttpError } from "../utilities/httpErrors";
@@ -30,13 +29,15 @@ export const extractUserSession = ({
 });
 
 export const login: RequestHandler = async (req, res, _next) => {
-  const { email, password } = isLoginCredsValid(req.body);
+  const { email, password, type } = isLoginCredsValid(req.body);
   const { keep } = req.query;
 
-  const user = await getUser(email);
+  const user = await getUser({ email, type });
 
   if (!user || !(await argon2.verify(user.password, password))) {
     throw generateHttpError("Conflict");
+  } else if (!user.isVerified) {
+    throw generateHttpError("Forbidden");
   }
 
   const response: HttpResponseMessage = {
@@ -58,22 +59,20 @@ export const sendRecovery: RequestHandler = async (req, res, _next) => {
     throw generateHttpError("Bad Request");
   }
 
-  const user = await getUser(email);
+  const user = await getUser({ email });
 
-  if (!user) {
-    throw generateHttpError("Conflict");
+  if (user) {
+    const id = nanoid();
+    createVerification({ id, userId: user.id });
+    sendEmail({
+      to: user.email,
+      subject: "Password Recovery",
+      content: `This is your recovery code: ${id}`,
+    });
   }
 
-  const id = nanoid();
-  await createVerification({ id, userId: user.id });
-  await sendEmail({
-    to: user.email,
-    subject: "Password Recovery",
-    content: `This is your recovery code: ${id}`,
-  });
-
   const response: HttpResponseMessage = {
-    message: "Recovery email sent",
+    message: "Recovery processing successful",
     success: true,
   };
 
@@ -116,11 +115,14 @@ export const logout: RequestHandler = (req, res, _next) => {
   res.send(response);
 };
 
-export const authorize =
+export const checkIfLoggedIn: RequestHandler = (req, _res, next) => {
+  if (!req.session.user) throw generateHttpError("Unauthorized");
+  return next();
+};
+
+export const checkIfAuthorized =
   (type: UserType): RequestHandler =>
   (req, _res, next) => {
-    if (!req.session.user) throw generateHttpError("Unauthorized");
-    else if (type !== req.session.user.type)
-      throw generateHttpError("Forbidden");
+    if (type !== req.session.user.type) throw generateHttpError("Forbidden");
     return next();
   };

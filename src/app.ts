@@ -11,6 +11,7 @@ import morgan from "morgan";
 import { redisClient, RedisStore, session } from "./config/session.config";
 import { sessionSecret, port, cookieSettings } from "./utilities/constants";
 import { error, notFound } from "./controllers/error.controller";
+import router from "./routes/general.routes";
 
 const app = express();
 app.use(cors());
@@ -39,6 +40,7 @@ app.get("/", (_req, res) => {
   });
 });
 
+app.use("/api", router);
 app.use(notFound);
 app.use(error);
 

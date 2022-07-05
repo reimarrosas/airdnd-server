@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import argon2 from "argon2";
 import { nanoid } from "nanoid";
 
-import { createUser, getUser } from "../services/user.services";
+import { createUser, getUser, verifyUser } from "../services/user.services";
 import { isSignupCredsValid } from "../utilities/authValidator";
 import { generateHttpError } from "../utilities/httpErrors";
 import {
@@ -15,7 +15,10 @@ import { clientUrl, hashingSettings } from "../utilities/constants";
 export const signup: RequestHandler = async (req, res, _next) => {
   const signupCreds = isSignupCredsValid(req.body);
 
-  const userInDb = await getUser(signupCreds.email);
+  const userInDb = await getUser({
+    email: signupCreds.email,
+    type: signupCreds.type,
+  });
 
   if (userInDb) {
     throw generateHttpError("Conflict");
@@ -54,6 +57,12 @@ export const verifyEmail: RequestHandler = async (req, res, _next) => {
 
   if (!verification) {
     throw generateHttpError("Conflict");
+  }
+
+  const verifiedUser = await verifyUser(verification.userId);
+
+  if (!verifiedUser) {
+    throw generateHttpError("Internal");
   }
 
   const response: HttpResponseMessage = {

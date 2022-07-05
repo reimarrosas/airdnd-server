@@ -20,12 +20,16 @@ const isFullNameValid = (fullName: unknown) =>
 
 const isPhoneNumberValid = (phoneNumber: unknown) =>
   typeof phoneNumber === "string" &&
-  phoneNumber.replace(/\D/, "").length === 10;
+  phoneNumber.replace(/\D/g, "").length === 10;
 
 const isExtensionValid = (extension: unknown) => {
   if (typeof extension !== "string") return false;
-  const normalized = extension.replace(/\D/, "");
-  return normalized.length >= 2 && normalized.length <= 8;
+  const normalized = extension.replace(/\D/g, "");
+  console.log(extension);
+  return (
+    (normalized.length >= 2 && normalized.length <= 8) ||
+    normalized.length === 0
+  );
 };
 
 /* === Type Narrowing === */

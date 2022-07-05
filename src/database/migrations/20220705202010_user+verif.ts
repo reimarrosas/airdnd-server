@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<void> {
       t.text("password").notNullable();
       t.text("phoneNumber").notNullable();
       t.text("extension");
+      t.text("type").checkIn(["Renter", "Owner"]);
       t.boolean("isVerified").defaultTo(false);
       t.timestamp("createdAt").defaultTo(knex.fn.now());
       t.timestamp("updatedAt").defaultTo(knex.fn.now());
